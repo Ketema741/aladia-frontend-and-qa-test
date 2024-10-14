@@ -1,52 +1,38 @@
 name: E2E Visual Regression Tests
-
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
-      - "**"
+      - main
 
 jobs:
-  e2e_visual_regression:
+  chromatic:
+    name: Run Chromatic
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: 20
 
       - name: Install pnpm
-        run: |
-          npm install -g pnpm
+        run: npm install -g pnpm
 
       - name: Install dependencies
-        run: |
-          cd ketema_girma
-          pnpm install
+        run: pnpm install
 
-      - name: Build Application
-        run: |
-          cd ketema_girma
-          pnpm run build
-
-      - name: Start Application
-        run: |
-          cd ketema_girma
-          pnpm run preview &
-
-      - name: Wait for application to start
-        run: |
-          cd ketema_girma
-          npx wait-on http://localhost:3000
-
-      - name: Run Cypress Tests with Chromatic
-        run: |
-          cd ketema_girma
-          ELECTRON_EXTRA_LAUNCH_ARGS=--remote-debugging-port=9222 pnpm cypress run --e2e
-          npx chromatic --cypress --project-token=chpt_88815be88a193d2 --exit-zero-on-changes
+      - name: Run Chromatic
+        uses: chromaui/action@latest
+        with:
+          projectToken: chpt_88815be88a193d2
+          exitZeroOnChanges: true
+          onlyChanged: true
+          zip: true

@@ -1,40 +1,34 @@
 name: Component Visual Regression Tests
-
 on:
+  push:
+    branches:
+      - "main"
   pull_request:
     branches:
       - "**"
 
 jobs:
-  component_visual_regression:
+  cypress-tests:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: "20.10.0"
 
       - name: Install pnpm
         run: npm install -g pnpm
 
       - name: Install dependencies
-        run: |
-          cd ketema_girma
-          pnpm install
+        run: pnpm install 
 
-      - name: Build Storybook
-        run: |
-          cd ketema_girma
-          pnpm run build-storybook
 
-      - name: Publish to Chromatic
+      - name: Run Cypress tests
         run: |
-          cd ketema_girma
-          npx chromatic --project-token=chpt_88815be88a193d2 --exit-zero-on-changes
+          pnpm run dev &
+          npx wait-on http://localhost:3000
+          pnpm cypress
