@@ -26,15 +26,15 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd admas_girma_test_project
+          cd ketema_girma
           pnpm install
 
       - name: Build Storybook
         run: |
-          cd admas_girma_test_project
+          cd ketema_girma
           pnpm run build-storybook
 
       - name: Publish to Chromatic
         run: |
-          cd admas_girma_test_project
+          cd ketema_girma
           npx chromatic --project-token=chpt_42e9d82edee316e --exit-zero-on-changes
