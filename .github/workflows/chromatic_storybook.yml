@@ -37,4 +37,4 @@ jobs:
       - name: Publish to Chromatic
         run: |
           cd ketema_girma
-          npx chromatic --project-token=chpt_42e9d82edee316e --exit-zero-on-changes
+          npx chromatic --project-token=chpt_4dfd8fe88bab2dd --exit-zero-on-changes

@@ -49,4 +49,4 @@ jobs:
         run: |
           cd ketema_girma
           ELECTRON_EXTRA_LAUNCH_ARGS=--remote-debugging-port=9222 pnpm cypress run --e2e
-          npx chromatic --cypress --project-token=chpt_42e9d82edee316e --exit-zero-on-changes
+          npx chromatic --cypress --project-token=chpt_4dfd8fe88bab2dd --exit-zero-on-changes
